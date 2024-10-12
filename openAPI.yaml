@@ -1,0 +1,80 @@
+openapi: 3.0.3
+info:
+  title: My API
+  description: The API of my TP
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /users:
+    get:
+      summary: Get a list of users
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: createdBy
+          schema:
+            type: string
+      responses:
+        '200':
+          description: This is a list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'  # Référence au schéma User
+        '500':
+          description: Server error
+
+  /users/{userId}:
+    put:
+      summary: Update an existing user
+      parameters:
+        - in: path
+          name: userId  # Changement de Id à userId pour la consistance
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated successfully
+        '400':
+          description: Bad request
+        '404':
+          description: User not found
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the user
+        name:
+          type: string
+          description: The name of the user
+        email:
+          type: string
+          description: The email address of the user
+        createdAt:
+          type: string
+          format: date-time
+          description: The date and time when the user was created
